@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="mb-4">📊 Статистика</h1>
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>Общий доход: {{ total_all }} руб.</h3>
+        <hr>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>По филиалам</h4>
+        {% for branch, stats in all_stats.items() %}
+        <div class="card mb-2">
+            <div class="card-header">{{ branch }}</div>
+            <div class="card-body">
+                <p>💰 Сумма: {{ stats.total }} руб.</p>
+                <p>📦 Операций: {{ stats.count }}</p>
+                <p>📈 Средний чек: {{ stats.avg }} руб.</p>
+                {% if stats.top %}
+                <p>🏆 Топ мастеров:</p>
+                <ul>
+                    {% for m in stats.top %}
+                    <li>{{ m.name }} – {{ m.amount }} руб.</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="col-md-6">
+        <h4>🏆 Топ-10 мастеров (все филиалы)</h4>
+        <ol>
+            {% for name, amount in top_masters %}
+            <li>{{ name }} – {{ amount }} руб.</li>
+            {% endfor %}
+        </ol>
+        <hr>
+        <h4>Последние доходы</h4>
+        <ul>
+            {% for inc in incomes|reverse %}
+            <li>{{ inc.date[:10] }} – {{ inc.master }}: {{ inc.amount }} руб.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
